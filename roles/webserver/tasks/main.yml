@@ -1,0 +1,34 @@
+---
+# tasks file for webserver
+
+- name: Install HTTPD
+  package:
+    name: "httpd"
+    state: present
+  when: ansible_os_family == "RedHat"
+  register: status_httpd
+
+- name: Create Document Root Folder
+  file:
+    path: "{{ dcdir }}"
+    state: directory
+  register: dir_status
+
+- name: Configure Web Server
+  template:
+    dest: /etc/httpd/conf.d/champ.conf
+    src: templates/localhttpd.conf
+  when: status_httpd.rc == 0
+  notify: Restart HTTPD Service
+
+- name: Download Page from URL
+  get_url:
+    url: "https://raw.githubusercontent.com/hrsikesa/ansible/master/index.html"
+    dest: "{{ dcdir }}"
+  when: dir_status.failed == false
+
+- name: Start Service
+  service:
+    name: "httpd"
+    state: started
+

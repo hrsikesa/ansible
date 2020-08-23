@@ -1,0 +1,27 @@
+---
+# tasks file for ec2-launch
+#
+- name: Lauch EC2 Innstance
+  ec2:
+    key_name: "mac-2acc"
+    instance_type: "t2.micro"
+    image: "ami-02354e95b39ca8dec"
+    wait: yes
+    count: 1
+    vpc_subnet_id: "subnet-1b364635"
+    assign_public_ip: yes
+    region: "us-east-1"
+    group_id: "sg-05b9c638eaac93ec2"
+    state: present
+    instance_tags:
+      name: webserver
+    aws_access_key: "{{ access_key }}"
+    aws_secret_key: "{{ secret_key }}"
+
+# Refresh EC2 cache  
+- name: Refresh EC2 cache
+  command: /myinventory/ec2.py --refresh-cache
+    
+# Taks for refreshing the Inventory 
+- name: Refresh inventory to ensure new instances exist in inventory
+  meta: refresh_inventory
