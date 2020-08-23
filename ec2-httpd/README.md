@@ -12,24 +12,24 @@ This is the example of Ansible project that shows how we can launch AWS EC2 Inst
    pip3 install boto
    ```
 3. For Dynamic Inventory for AWS use dynamic-inventory folder(present in same repo) .
-In this ec2.py containes that code that will fetch the IP's of EC2 Instances, So connect with AWS its requires AWS Access Key & Secret Access Key.
+In this ec2.py containes that code that will fetch the IP's of EC2 Instances, So to connect with AWS its requires AWS Access Key & Secret Access Key.
 Export these as enviorment variables or add them in ec2.ini .
 
    If we want to use Dynamic Inventory for some other service then refer to this 
 [link](https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory)
 
-4. Use ansible.cfg file as Ansible configuration file.
-   In it in **inventory** specify the path of inventory folder which contains both ec2.py & ece.ini file.
+4. Use ansible.cfg((present in same repo)file as Ansible configuration file.
+   In it in **inventory** specify the path of inventory folder which contains both ec2.py & ec2.ini file.
    
    Run below command to verify whether our Dynamic Inventory is working or not.
    This will list all EC2 Instances in our AWS account.
      ```bash
    ansible all --list-hosts
    ```
-5. Now to launch Ec2 instance via Ansible use ec2-launch role(present in same repo unnder roles).
+5. Now to launch Ec2 instance via Ansible use ec2-launch role(present in same repo under roles).
    To launch Ec2 Instance we need AWS Access Keys & Secret Access Keys with sufficient premissions to create EC2 Instance.
-
-   Use below command to encrypt AWS Access Keys & Secret Access Keys via Ansible Vault . Specify valuesAWS Access Keys & Secret Access Keys in vars/main.yaml
+ 
+   Use below command to encrypt AWS Access Keys & Secret Access Keys via Ansible Vault . Specify values of AWS Access Keys & Secret Access Keys in vars/main.yaml file under ec2-launch role directory.
    
    ```bash
    ansible-vault encrypt --vault-id vault@prompt  /etc/ansible/roles/ec2-launch/vars/main.yml 
@@ -38,9 +38,9 @@ Export these as enviorment variables or add them in ec2.ini .
 
    In ec2-launch role we have also added task  for refreshing the Inventory to ensure new instances exist in inventory
 
-6. Use webserver role(present in same repo unnder roles) to configure HTTPD  Server on all EC2 Instances that have tag **webserver** attached.
+6. Use webserver role(present in same repo under roles) to configure HTTPD  Server on all EC2 Instances that have tag **webserver** attached.
 
-7. Create a playbook that use both the roles ec2-launch & webserver . 
+7. Create a playbook that uses both the roles ec2-launch & webserver . 
    
    Playbook(launch_ec2-webserver.yaml) should look like this .
    ```bash
